@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/components/card_item.dart';
 import 'package:wallet/pages/add_card_page.dart';
+import 'package:hive/hive.dart';
+import 'package:wallet/models/card_model.dart';
 
 class MyMainPage extends StatefulWidget {
   const MyMainPage({super.key});
@@ -10,6 +12,33 @@ class MyMainPage extends StatefulWidget {
 }
 
 class _MyMainPageState extends State<MyMainPage> {
+  List<CardInfo> localCards = [];
+
+  @override
+  void initState() {
+    super.initState();
+    loadCards();
+  }
+
+  void loadCards() {
+    final box = Hive.box('cardsBox');
+    final cards =
+        box.values
+            .map((el) => CardInfo.fromMap(Map<String, dynamic>.from(el)))
+            .toList();
+    setState(() {
+      localCards = cards;
+    });
+  }
+
+  Future<void> _navigateToAddCard() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => MyAddCardPage()),
+    );
+    loadCards();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,28 +46,27 @@ class _MyMainPageState extends State<MyMainPage> {
       appBar: AppBar(title: const Text('Мои карты')),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            childAspectRatio: 1.3,
-            crossAxisSpacing: 10.0,
-            mainAxisSpacing: 10.0,
-          ),
-          itemCount: 5 /*localCards.length*/,
-          itemBuilder: (BuildContext context, int index) {
-            return CardItem(card: 'card');
-          },
-        ),
+        child:
+            localCards.isEmpty
+                ? Center(child: Text('У вас пока нет сохраненных карт'))
+                : GridView.builder(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 1.3,
+                    crossAxisSpacing: 10.0,
+                    mainAxisSpacing: 10.0,
+                  ),
+                  itemCount: localCards.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    final card = localCards[index];
+                    return CardItem(card: card);
+                  },
+                ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => MyAddCardPage()),
-          );
-        },
-        child: Icon(Icons.add),
+        onPressed: _navigateToAddCard,
         backgroundColor: Colors.amber,
+        child: Icon(Icons.add),
       ),
     );
   }

@@ -1,8 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:wallet/nav_page.dart';
 import 'package:wallet/pages/main_page.dart';
+import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Supabase.initialize(
+    url: 'https://sawzxembmwabtxeedmya.supabase.co',
+    anonKey:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNhd3p4ZW1ibXdhYnR4ZWVkbXlhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIzMjczMDMsImV4cCI6MjA2NzkwMzMwM30.jZJi2AmTHzfTPJsAcmOpQgjDpA-kX7_5gUW0HUx2Jd0',
+  );
+  final supabase = Supabase.instance.client;
+  final appDocDir = await getApplicationDocumentsDirectory();
+  Hive.init(appDocDir.path);
+  await Hive.openBox('cardsBox');
   runApp(const MyApp());
 }
 
