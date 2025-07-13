@@ -13,6 +13,8 @@ class _MyAddCardPageState extends State<MyAddCardPage> {
   final supabase = Supabase.instance.client;
   List<Map<String, dynamic>> shops = [];
   bool isLoading = true;
+  String searchQuery = '';
+  late List<Map<String, dynamic>> _searchedShops = [];
   @override
   void initState() {
     super.initState();
@@ -27,6 +29,7 @@ class _MyAddCardPageState extends State<MyAddCardPage> {
       print(data);
       setState(() {
         shops = data.cast<Map<String, dynamic>>();
+        _searchedShops = shops;
         isLoading = false;
       });
     } catch (error) {
@@ -35,6 +38,23 @@ class _MyAddCardPageState extends State<MyAddCardPage> {
         isLoading = false;
       });
     }
+  }
+
+  void _searchShops(String query) {
+    setState(() {
+      if (query.isEmpty) {
+        _searchedShops = shops;
+      } else {
+        _searchedShops =
+            shops.where((shop) {
+              final nameMatches = shop['name']
+                  .toString()
+                  .toLowerCase()
+                  .contains(query.toLowerCase());
+              return nameMatches;
+            }).toList();
+      }
+    });
   }
 
   @override
@@ -48,44 +68,107 @@ class _MyAddCardPageState extends State<MyAddCardPage> {
       body:
           isLoading
               ? Center(child: CircularProgressIndicator())
-              : ListView.builder(
-                itemCount: shops.length,
-                itemBuilder: (context, index) {
-                  final shop = shops[index];
-                  final name = shop['name'] ?? 'Без названия';
-                  final image = shop['image_url'] ?? '';
-
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder:
-                              (context) => MyAddCardInfoPage(
-                                shopName: name,
-                                shopImg: image,
+              : Column(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(color: Colors.white),
+                    height: 80.0,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 330.0,
+                          child: TextField(
+                            decoration: InputDecoration(
+                              fillColor: const Color.fromARGB(
+                                255,
+                                255,
+                                255,
+                                255,
                               ),
+                              filled: true,
+                              hintText: "Поиск по магазинам...",
+                              hintStyle: const TextStyle(
+                                color: Color.fromRGBO(118, 118, 118, 1),
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.w400,
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15.0),
+                                borderSide: const BorderSide(
+                                  color: Colors.transparent,
+                                ),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15.0),
+                                borderSide: const BorderSide(
+                                  color: Color.fromRGBO(118, 118, 118, 1),
+                                  width: 1,
+                                ),
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(
+                                vertical: 13.0,
+                                horizontal: 13.0,
+                              ),
+                            ),
+                            onChanged: (value) {
+                              setState(() {
+                                searchQuery = value;
+                                _searchShops(searchQuery);
+                              });
+                            },
+                          ),
                         ),
-                      );
-                    },
-                    child: Container(
-                      margin: EdgeInsets.symmetric(
-                        horizontal: 4.0,
-                        vertical: 3.0,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Color.fromRGBO(255, 255, 255, 1),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: ListTile(
-                        title: Text(
-                          name,
-                          style: TextStyle(fontSize: 16.0, color: Colors.black),
-                        ),
-                      ),
+                      ],
                     ),
-                  );
-                },
+                  ),
+
+                  SizedBox(height: 25.0),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: _searchedShops.length,
+                      itemBuilder: (context, index) {
+                        final shop = _searchedShops[index];
+                        final name = shop['name'] ?? 'Без названия';
+                        final image = shop['image_url'] ?? '';
+
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => MyAddCardInfoPage(
+                                      shopName: name,
+                                      shopImg: image,
+                                    ),
+                              ),
+                            );
+                          },
+                          child: Container(
+                            margin: EdgeInsets.symmetric(
+                              horizontal: 4.0,
+                              vertical: 3.0,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Color.fromRGBO(255, 255, 255, 1),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: ListTile(
+                              title: Text(
+                                name,
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
     );
   }

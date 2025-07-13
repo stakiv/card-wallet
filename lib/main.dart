@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:wallet/nav_page.dart';
 import 'package:wallet/pages/main_page.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
@@ -26,6 +25,10 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(theme: ThemeData(), home: const MyMainPage());
+    return MaterialApp(
+      theme: ThemeData(),
+      home: const MyMainPage(),
+      debugShowCheckedModeBanner: false,
+    );
   }
 }

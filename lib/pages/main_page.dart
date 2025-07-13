@@ -43,12 +43,23 @@ class _MyMainPageState extends State<MyMainPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
-      appBar: AppBar(title: const Text('Мои карты')),
+      appBar: AppBar(
+        title: const Text('Мои карты'),
+        backgroundColor: Color.fromRGBO(255, 255, 255, 1),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child:
             localCards.isEmpty
-                ? Center(child: Text('У вас пока нет сохраненных карт'))
+                ? Center(
+                  child: Text(
+                    'У вас пока нет сохраненных карт',
+                    style: TextStyle(
+                      color: Color.fromRGBO(0, 0, 0, 1),
+                      fontSize: 18.0,
+                    ),
+                  ),
+                )
                 : GridView.builder(
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
@@ -65,8 +76,8 @@ class _MyMainPageState extends State<MyMainPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _navigateToAddCard,
-        backgroundColor: Colors.amber,
-        child: Icon(Icons.add),
+        backgroundColor: Color.fromRGBO(255, 218, 218, 1),
+        child: Icon(Icons.add, color: Colors.black),
       ),
     );
   }
