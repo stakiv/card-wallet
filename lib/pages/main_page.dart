@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:wallet/components/card_item.dart';
+import 'package:wallet/models/card_provider.dart';
 import 'package:wallet/pages/add_card_page.dart';
 import 'package:hive/hive.dart';
 import 'package:wallet/models/card_model.dart';
+import 'package:provider/provider.dart';
 
 class MyMainPage extends StatefulWidget {
   const MyMainPage({super.key});
@@ -41,6 +43,7 @@ class _MyMainPageState extends State<MyMainPage> {
 
   @override
   Widget build(BuildContext context) {
+    final cardsProvider = Provider.of<CardProvider>(context);
     return Scaffold(
       backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
       appBar: AppBar(
@@ -50,7 +53,7 @@ class _MyMainPageState extends State<MyMainPage> {
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child:
-            localCards.isEmpty
+            cardsProvider.cards.isEmpty
                 ? Center(
                   child: Text(
                     'У вас пока нет сохраненных карт',
@@ -67,9 +70,9 @@ class _MyMainPageState extends State<MyMainPage> {
                     crossAxisSpacing: 10.0,
                     mainAxisSpacing: 10.0,
                   ),
-                  itemCount: localCards.length,
+                  itemCount: cardsProvider.cards.length,
                   itemBuilder: (BuildContext context, int index) {
-                    final card = localCards[index];
+                    final card = cardsProvider.cards[index];
                     return CardItem(card: card);
                   },
                 ),

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:hive/hive.dart';
+import 'package:provider/provider.dart';
 import 'package:wallet/models/card_model.dart';
+import 'package:wallet/models/card_provider.dart';
 import 'package:wallet/pages/main_page.dart';
 
 class MyAddCardInfoPage extends StatefulWidget {
@@ -50,10 +52,11 @@ class _MyAddCardInfoPageState extends State<MyAddCardInfoPage> {
     }
   }
 
+  /*
   void saveCard(CardInfo card) {
     final box = Hive.box('cardsBox');
     box.put(card.cardNumber, card.toMap());
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -135,7 +138,7 @@ class _MyAddCardInfoPageState extends State<MyAddCardInfoPage> {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      onPressed: () {
+                      onPressed: () async {
                         final cardNumber = _cardNumberController.text.trim();
                         if (cardNumber.isEmpty || cardNumber == '') {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -148,8 +151,13 @@ class _MyAddCardInfoPageState extends State<MyAddCardInfoPage> {
                             shopImgUrl: widget.shopImg,
                             cardNumber: cardNumber,
                           );
+                          final cardsProvider = Provider.of<CardProvider>(
+                            context,
+                            listen: false,
+                          );
 
-                          saveCard(card);
+                          //saveCard(card);
+                          await cardsProvider.addCard(card);
 
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(

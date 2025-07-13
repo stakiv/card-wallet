@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:wallet/models/card_provider.dart';
 import 'package:wallet/pages/main_page.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,7 +18,9 @@ void main() async {
   final appDocDir = await getApplicationDocumentsDirectory();
   Hive.init(appDocDir.path);
   await Hive.openBox('cardsBox');
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(create: (_) => CardProvider(), child: const MyApp()),
+  );
 }
 
 class MyApp extends StatelessWidget {
