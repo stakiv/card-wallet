@@ -48,11 +48,18 @@ class _MyCardPageState extends State<MyCardPage> {
                 (BuildContext context) => <PopupMenuEntry<String>>[
                   const PopupMenuItem<String>(
                     value: 'edit',
-                    child: Row(children: [Text('Редактировать')]),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [Icon(Icons.edit), Text('Изменить')],
+                    ),
                   ),
+                  const PopupMenuDivider(),
                   const PopupMenuItem<String>(
                     value: 'delete',
-                    child: Row(children: [Text('Удалить')]),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [Icon(Icons.delete_outline), Text('Удалить')],
+                    ),
                   ),
                 ],
           ),
@@ -60,7 +67,7 @@ class _MyCardPageState extends State<MyCardPage> {
         backgroundColor: Colors.white,
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(vertical: 50.0),
+        padding: EdgeInsets.symmetric(vertical: 50.0, horizontal: 15.0),
         child: Center(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -77,6 +84,41 @@ class _MyCardPageState extends State<MyCardPage> {
                   width: 300,
                   height: 160,
                   drawText: true,
+                ),
+              ),
+              SizedBox(height: 60.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    "Дополнительная информация",
+                    style: TextStyle(
+                      color: Color.fromRGBO(118, 118, 118, 1),
+                      fontSize: 13.0,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 5.0),
+              Container(
+                width: double.infinity,
+                padding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 12.0),
+                decoration: BoxDecoration(
+                  color: Color.fromRGBO(255, 255, 255, 1),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: Color.fromRGBO(118, 118, 118, 1),
+                    width: 2.0,
+                  ),
+                ),
+                child: Text(
+                  widget.cardInfo.cardNote.isNotEmpty
+                      ? widget.cardInfo.cardNote
+                      : "Нет дополнительной информации",
+                  style: TextStyle(
+                    color: Color.fromRGBO(0, 0, 0, 1),
+                    fontSize: 16.0,
+                  ),
                 ),
               ),
             ],
