@@ -24,4 +24,18 @@ class CardInfo {
     cardNumber: map['cardNumber'],
     cardNote: map['cardNote'],
   );
+
+  CardInfo copyWith({
+    String? shopName,
+    String? shopImgUrl,
+    String? cardNumber,
+    String? cardNote,
+  }) {
+    return CardInfo(
+      shopName: shopName ?? this.shopName,
+      shopImgUrl: shopImgUrl ?? this.shopImgUrl,
+      cardNumber: cardNumber ?? this.cardNumber,
+      cardNote: cardNote ?? this.cardNote,
+    );
+  }
 }

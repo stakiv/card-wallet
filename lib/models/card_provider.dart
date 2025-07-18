@@ -28,4 +28,12 @@ class CardProvider extends ChangeNotifier {
     await _box.delete(card.cardNumber);
     loadCards();
   }
+
+  Future<void> editCard(CardInfo oldCard, CardInfo newCard) async {
+    if (oldCard.cardNumber != newCard.cardNumber) {
+      await _box.delete(oldCard.cardNumber);
+    }
+    await _box.put(newCard.cardNumber, newCard.toMap());
+    loadCards();
+  }
 }
