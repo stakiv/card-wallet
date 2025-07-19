@@ -45,13 +45,18 @@ class _MyAddCardPageState extends State<MyAddCardPage> {
       if (query.isEmpty) {
         _searchedShops = shops;
       } else {
+        final queryToLower = query.toLowerCase();
         _searchedShops =
             shops.where((shop) {
               final nameMatches = shop['name']
                   .toString()
                   .toLowerCase()
                   .contains(query.toLowerCase());
-              return nameMatches;
+              final engNameMatches = shop['eng_name']
+                  .toString()
+                  .toLowerCase()
+                  .contains(query.toLowerCase());
+              return nameMatches || engNameMatches;
             }).toList();
       }
     });
@@ -130,6 +135,7 @@ class _MyAddCardPageState extends State<MyAddCardPage> {
                       itemBuilder: (context, index) {
                         final shop = _searchedShops[index];
                         final name = shop['name'] ?? 'Без названия';
+                        final engName = shop['eng_name'] ?? 'Без названия';
                         final image = shop['image_url'] ?? '';
 
                         return GestureDetector(
@@ -140,6 +146,7 @@ class _MyAddCardPageState extends State<MyAddCardPage> {
                                 builder:
                                     (context) => MyAddCardInfoPage(
                                       shopName: name,
+                                      shopEngName: engName,
                                       shopImg: image,
                                     ),
                               ),

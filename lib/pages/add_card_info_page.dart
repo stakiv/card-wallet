@@ -10,9 +10,11 @@ class MyAddCardInfoPage extends StatefulWidget {
   const MyAddCardInfoPage({
     super.key,
     required this.shopName,
+    required this.shopEngName,
     required this.shopImg,
   });
   final String shopName;
+  final String shopEngName;
   final String shopImg;
 
   @override
@@ -190,6 +192,7 @@ class _MyAddCardInfoPageState extends State<MyAddCardInfoPage> {
                           } else {
                             final card = CardInfo(
                               shopName: widget.shopName,
+                              shopEngName: widget.shopEngName,
                               shopImgUrl: widget.shopImg,
                               cardNumber: cardNumber,
                               cardNote: cardNote,
